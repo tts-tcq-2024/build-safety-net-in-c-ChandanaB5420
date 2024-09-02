@@ -25,30 +25,26 @@ char getSoundexCode(char c) {
     return '0'; // For non-alphabetic characters
 }
 // Simplified pure function to generate Soundex code
+char getSoundexCode(char c);
+
 void generateSoundex(const char *name, char *soundex) {
     // Ensure that name is not NULL and soundex is a valid pointer
     if (name == NULL || soundex == NULL) {
         return;
     }
 
-    // Handle empty name case
-    if (name[0] == '\0') {
-        strcpy(soundex, "0000");
-        return;
-    }
-
-    // Basic case for a pure function with no loops or conditions
+    // Convert the first character and assign Soundex code
     soundex[0] = toupper(name[0]);
-    soundex[1] = getSoundexCode(name[1]); // Fixed index access
-    soundex[2] = getSoundexCode(name[2]); // Fixed index access
-    soundex[3] = getSoundexCode(name[3]); // Fixed index access
+    soundex[1] = getSoundexCode(name[1]);
+    soundex[2] = getSoundexCode(name[2]);
+    soundex[3] = getSoundexCode(name[3]);
 
-    // Fill remaining with '0'
-    if (name[1] == '\0') soundex[1] = '0';
-    if (name[2] == '\0') soundex[2] = '0';
-    if (name[3] == '\0') soundex[3] = '0';
-
+    // Fill remaining positions with '0' and terminate
+    for (int i = 1; i < 4; ++i) {
+        if (soundex[i] == '\0') {
+            soundex[i] = '0';
+        }
+    }
     soundex[4] = '\0'; // Null-terminate
 }
-
 #endif // SOUNDEX_H
