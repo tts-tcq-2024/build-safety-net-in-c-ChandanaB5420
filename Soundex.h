@@ -67,8 +67,8 @@ void generateSoundex(const char *name, char *soundex) {
     }
 
     // Ensure the Soundex code is exactly 4 characters long
-    if (sIndex < 4) {
-        memset(soundex + sIndex, '0', 4 - sIndex);
+    while (sIndex < 4) {
+        soundex[sIndex++] = '0';
     }
 
     soundex[4] = '\0'; // Null-terminate the Soundex string
