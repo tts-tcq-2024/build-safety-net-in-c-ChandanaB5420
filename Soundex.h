@@ -1,23 +1,35 @@
-#ifndef SOUNDEX_H
-#define SOUNDEX_H
-
-char getSoundexCode(char c);
-void generateSoundex(const char *name, char *soundex);
- 
-#include "Soundex.h"
+#include <stdio.h>
 #include <ctype.h>
 
-
-static const char codeMap[] = "000000000000012301200400500600";
-
+// Function to get the Soundex code for a single character
 char getSoundexCode(char c) {
-    char upperChar = toupper(c);
-    if (upperChar < 'A' || upperChar > 'Z') {
-        return '0'; // Non-alphabetic character
+    switch (toupper(c)) {
+        case 'B': case 'F': case 'P': case 'V': return '1';
+        case 'C': case 'G': case 'J': case 'K': case 'Q': case 'S': case 'X': case 'Z': return '2';
+        case 'D': case 'T': return '3';
+        case 'L': return '4';
+        case 'M': case 'N': return '5';
+        case 'R': return '6';
+        default: return '0';
     }
-    return codeMap[upperChar - 'A'];
 }
 
+// Function to process a single character and update the Soundex code
+void processCharacter(const char *name, char *soundex, int *index, char previousCode) {
+    if (name[0] == '\0' || *index >= 4) {
+        return;
+    }
+
+    char currentCode = getSoundexCode(name[0]);
+    if (currentCode != '0' && currentCode != previousCode) {
+        soundex[*index] = currentCode;
+        (*index)++;
+    }
+
+    processCharacter(name + 1, soundex, index, currentCode);
+}
+
+// Wrapper function to get the Soundex code for a name
 void getSoundexCodeForName(const char *name, char *soundex) {
     int index = 1;
     soundex[0] = toupper(name[0]);
@@ -30,21 +42,15 @@ void getSoundexCodeForName(const char *name, char *soundex) {
     soundex[index] = '\0';
 }
 
+int main() {
+    char name[100];
+    char soundex[5];
 
-void generateSoundex(const char *name, char *soundex) {
-    if (name[0] == '\0') {
-        // Handle the case when the input name is empty
-        soundex[0] = '\0';
-        return;
-    }
+    printf("Enter a name: ");
+    scanf("%s", name);
 
-    soundex[0] = toupper(name[0]); // Start with the first character
-    soundex[1] = soundex[2] = soundex[3] = '0'; // Pre-fill remaining positions
-    int index = 1; // Start filling Soundex from index 1
+    getSoundexCodeForName(name, soundex);
+    printf("Soundex code for %s is %s\n", name, soundex);
 
-    getSoundexCodeForName(name + 1, soundex, &index, '0');
-
-    soundex[4] = '\0'; // Null-terminate the Soundex code
+    return 0;
 }
-
-#endif // SOUNDEX_H
