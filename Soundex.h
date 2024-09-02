@@ -3,16 +3,13 @@
 
 char getSoundexCode(char c);
 void generateSoundex(const char *name, char *soundex);
-
-
  
 #include "Soundex.h"
 #include <ctype.h>
 
-// Precomputed mapping from characters to Soundex codes
+
 static const char codeMap[] = "000000000000012301200400500600";
 
-// Pure function to get the Soundex code for a given character
 char getSoundexCode(char c) {
     char upperChar = toupper(c);
     if (upperChar < 'A' || upperChar > 'Z') {
@@ -21,22 +18,21 @@ char getSoundexCode(char c) {
     return codeMap[upperChar - 'A'];
 }
 
-// Pure function to get the Soundex code for a substring of the name
 void getSoundexCodeForName(const char *name, char *soundex, int *index, char previousCode) {
-    if (name[0] == '\0' || *index >= 4) {
-        return;
-    }
+    while (*name != '\0' && *index < 4) {
+        char currentCode = getSoundexCode(*name);
 
-    char currentCode = getSoundexCode(name[0]);
-    if (currentCode != '0' && currentCode != previousCode) {
-        soundex[*index] = currentCode;
-        (*index)++;
-    }
+        if (currentCode != '0' && currentCode != previousCode) {
+            soundex[*index] = currentCode;
+            (*index)++;
+            previousCode = currentCode; // Update previousCode to the currentCode used
+        }
 
-    getSoundexCodeForName(name + 1, soundex, index, currentCode);
+        name++; // Move to the next character
+    }
 }
 
-// Pure function to generate the Soundex code
+
 void generateSoundex(const char *name, char *soundex) {
     if (name[0] == '\0') {
         // Handle the case when the input name is empty
