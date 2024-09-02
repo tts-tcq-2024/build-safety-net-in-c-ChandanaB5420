@@ -21,10 +21,6 @@ char getSoundexCode(char c) {
     return codeMap[upperChar - 'A'];
 }
 
-    char upperChar = toupper(c);
-    return codeMap[upperChar - 'A'];
-}
-
 // Pure function to get the Soundex code for a substring of the name
 void getSoundexCodeForName(const char *name, char *soundex, int *index, char previousCode) {
     if (name[0] == '\0' || *index >= 4) {
