@@ -5,17 +5,47 @@
 #include <ctype.h>
 #include <string.h>
 
+#include <ctype.h>
+
 char getSoundexCode(char c) {
+    static const char soundexMap[26] = {
+        '0', // A
+        '1', // B
+        '2', // C
+        '3', // D
+        '0', // E
+        '1', // F
+        '2', // G
+        '0', // H
+        '0', // I
+        '1', // J
+        '2', // K
+        '0', // L
+        '5', // M
+        '5', // N
+        '0', // O
+        '2', // P
+        '0', // Q
+        '0', // R
+        '0', // S
+        '3', // T
+        '0', // U
+        '1', // V
+        '0', // W
+        '0', // X
+        '2', // Y
+        '2'  // Z
+    };
+
+    // Convert character to uppercase
     c = toupper(c);
-    switch (c) {
-        case 'B': case 'F': case 'P': case 'V': return '1';
-        case 'C': case 'G': case 'J': case 'K': case 'Q': case 'S': case 'X': case 'Z': return '2';
-        case 'D': case 'T': return '3';
-        case 'L': return '4';
-        case 'M': case 'N': return '5';
-        case 'R': return '6';
-        default: return '0'; // For A, E, I, O, U, H, W, Y
+
+    // Check if character is within 'A' to 'Z'
+    if (c >= 'A' && c <= 'Z') {
+        return soundexMap[c - 'A'];
     }
+
+    return '0'; // For non-alphabetic characters
 }
 
 void generateSoundex(const char *name, char *soundex) {
