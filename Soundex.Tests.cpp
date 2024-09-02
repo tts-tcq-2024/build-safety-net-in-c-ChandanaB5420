@@ -1,48 +1,35 @@
-#include <gtest/gtest.h>
+#include <stdio.h>
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 #include "soundex.h"
 
-TEST(SoundexTest, BasicCases) {
-    char soundex[5];
-
-    generateSoundex("Smith", soundex);
-    EXPECT_STREQ(soundex, "S530");
-
-    generateSoundex("Jackson", soundex);
-    EXPECT_STREQ(soundex, "J252");
-
-    generateSoundex("Honeyman", soundex);
-    EXPECT_STREQ(soundex, "H555");
-
-    generateSoundex("Robert", soundex);
-    EXPECT_STREQ(soundex, "R163");
-
-    generateSoundex("Miller", soundex);
-    EXPECT_STREQ(soundex, "M460");
-
-    generateSoundex("Lee", soundex);
-    EXPECT_STREQ(soundex, "L000");
+// Pure test function to check Soundex results
+void testSoundex(const char *name, const char *expected) {
+    char *soundex = generateSoundex(name);
+    assert(soundex != NULL); // Ensure memory allocation succeeded
+    assert(strcmp(soundex, expected) == 0);
+    printf("generateSoundex(\"%s\") = \"%s\"; Passed\n", name, soundex);
+    free(soundex); // Free the allocated memory
 }
 
-TEST(SoundexTest, EdgeCases) {
-    char soundex[5];
+int main() {
+    // Test cases
+    testSoundex("Smith", "S530");
+    testSoundex("Jackson", "J252");
+    testSoundex("Honeyman", "H555");
+    testSoundex("Robert", "R163");
+    testSoundex("Miller", "M460");
+    testSoundex("Lee", "L000");
 
-    generateSoundex("", soundex);
-    EXPECT_STREQ(soundex, "0000");
+    // Edge cases
+    testSoundex("", "0000");       // Empty string should return "0000"
+    testSoundex("A", "A000");      // Single character input
+    testSoundex("AB", "A120");     // Two character input
+    testSoundex("A123", "A123");   // Input longer than 4 characters
+    testSoundex("Hello", "H440");  // Typical case with a common name
 
-    generateSoundex("A", soundex);
-    EXPECT_STREQ(soundex, "A000");
+    printf("All tests passed.\n");
 
-    generateSoundex("AB", soundex);
-    EXPECT_STREQ(soundex, "A120");
-
-    generateSoundex("A123", soundex);
-    EXPECT_STREQ(soundex, "A123");
-
-    generateSoundex("Hello", soundex);
-    EXPECT_STREQ(soundex, "H440");
-}
-
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    return 0;
 }
