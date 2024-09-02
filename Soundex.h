@@ -1,10 +1,19 @@
 #ifndef SOUNDEX_H
 #define SOUNDEX_H
 
+char getSoundexCode(char c);
+char* generateSoundex(const char *name);
+
+#endif // SOUNDEX_H
+
+cpp
+Copy code
 #include "Soundex.h"
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
 
+// Maps a character to its Soundex code
 char getSoundexCode(char c) {
     c = toupper(c);
     switch (c) {
@@ -18,23 +27,54 @@ char getSoundexCode(char c) {
     }
 }
 
-void generateSoundex(const char *name, char *soundex) {
-    int len = strlen(name);
-    soundex[0] = toupper(name[0]);
-    int sIndex = 1;
+// Simplifies the addition of a Soundex code character
+char* addCodeToSoundex(const char *name, char previousCode, int sIndex) {
+    char code = getSoundexCode(*name);
 
-    for (int i = 1; i < len && sIndex < 4; i++) {
-        char code = getSoundexCode(name[i]);
-        if (code != '0' && code != soundex[sIndex - 1]) {
-            soundex[sIndex++] = code;
+    // Return early if we reach the end of the string or Soundex length is 4
+    if (*name == '\0' || sIndex >= 4) {
+        char *result = (char*)malloc(5 * sizeof(char));
+        if (!result) return NULL; // Handle allocation failure
+        memset(result, '0', 4); // Fill with '0'
+        result[4] = '\0';
+        return result;
+    }
+
+    // Decide if the code should be added
+    if (code != '0' && code != previousCode) {
+        char *result = (char*)malloc(5 * sizeof(char));
+        if (!result) return NULL; // Handle allocation failure
+        result[0] = code;
+        result[1] = '\0';
+        char *rest = addCodeToSoundex(name + 1, code, sIndex + 1);
+        if (rest) {
+            strcat(result, rest);
+            free(rest);
         }
+        return result;
+    } else {
+        return addCodeToSoundex(name + 1, previousCode, sIndex);
     }
-
-    while (sIndex < 4) {
-        soundex[sIndex++] = '0';
-    }
-
-    soundex[4] = '\0';
 }
 
-#endif // SOUNDEX_H
+// Generates the Soundex code from a given name
+char* generateSoundex(const char *name) {
+    if (*name == '\0') {
+        char *result = (char*)malloc(5 * sizeof(char));
+        if (!result) return NULL; // Handle allocation failure
+        result[0] = '\0'; // Handle empty name
+        return result;
+    }
+
+    char *result = (char*)malloc(5 * sizeof(char));
+    if (!result) return NULL; // Handle allocation failure
+    result[0] = toupper(*name);
+    result[1] = '\0'; // Start with the first character
+    char *rest = addCodeToSoundex(name + 1, getSoundexCode(*name), 1);
+    if (rest) {
+        strcat(result, rest);
+        free(rest);
+    }
+    
+    return result;
+}
