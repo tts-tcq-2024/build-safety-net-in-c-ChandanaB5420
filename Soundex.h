@@ -1,8 +1,10 @@
+#ifndef SOUNDEX_H
+#define SOUNDEX_H
+
 #include "Soundex.h"
 #include <ctype.h>
 #include <string.h>
 
-// Maps a character to its Soundex code
 char getSoundexCode(char c) {
     c = toupper(c);
     switch (c) {
@@ -16,31 +18,23 @@ char getSoundexCode(char c) {
     }
 }
 
-// Recursive helper function to process the name and generate the Soundex code
-void generateSoundexRecursive(const char *name, char *soundex, int sIndex, char previousCode) {
-    if (sIndex >= 4 || name[0] == '\0') {
-        // Base case: stop recursion if we have filled the Soundex code or reached the end of the name
-        while (sIndex < 4) soundex[sIndex++] = '0';
-        soundex[4] = '\0'; // Null-terminate the result
-        return;
-    }
-
-    char code = getSoundexCode(name[0]);
-    if (code != '0' && code != previousCode) {
-        soundex[sIndex] = code;
-        generateSoundexRecursive(name + 1, soundex, sIndex + 1, code);
-    } else {
-        generateSoundexRecursive(name + 1, soundex, sIndex, previousCode);
-    }
-}
-
-// Generates the Soundex code from a given name
 void generateSoundex(const char *name, char *soundex) {
-    if (name[0] == '\0') {
-        soundex[0] = '\0'; // Handle empty name
-        return;
+    int len = strlen(name);
+    soundex[0] = toupper(name[0]);
+    int sIndex = 1;
+
+    for (int i = 1; i < len && sIndex < 4; i++) {
+        char code = getSoundexCode(name[i]);
+        if (code != '0' && code != soundex[sIndex - 1]) {
+            soundex[sIndex++] = code;
+        }
     }
 
-    soundex[0] = toupper(name[0]); // Start with the first character
-    generateSoundexRecursive(name + 1, soundex, 1, getSoundexCode(name[0]));
+    while (sIndex < 4) {
+        soundex[sIndex++] = '0';
+    }
+
+    soundex[4] = '\0';
 }
+
+#endif // SOUNDEX_H
