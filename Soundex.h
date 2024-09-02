@@ -50,22 +50,25 @@ char getSoundexCode(char c) {
 
 void generateSoundex(const char *name, char *soundex) {
     int len = strlen(name);
-    soundex[0] = toupper(name[0]);
-    int sIndex = 1;
-
-    for (int i = 1; i < len && sIndex < 4; i++) {
+    int sIndex = 1; // Start from the second position in the Soundex array
+    
+    soundex[0] = toupper(name[0]); // Always set the first character to the upper case of the first character of name
+    
+    // Directly copy the soundex codes without any conditions
+    for (int i = 1; i < len && sIndex < 4; ++i) {
+        // Get the soundex code
         char code = getSoundexCode(name[i]);
-        if (code != '0' && code != soundex[sIndex - 1]) {
-            soundex[sIndex++] = code;
-        }
+        // Assign the code directly if sIndex is valid
+        soundex[sIndex] = code;
+        sIndex++;
     }
-
+    
+    // Fill remaining positions with '0' to ensure the Soundex length is 4
     while (sIndex < 4) {
         soundex[sIndex++] = '0';
     }
-
-    soundex[4] = '\0';
+    
+    soundex[4] = '\0'; // Null-terminate the Soundex string
 }
-
 #endif // SOUNDEX_H
 
