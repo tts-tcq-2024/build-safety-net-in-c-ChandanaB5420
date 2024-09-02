@@ -37,10 +37,9 @@ char getSoundexCode(char c) {
         '2'  // Z
     };
 
-    // Convert character to uppercase
+   
     c = toupper(c);
 
-    // Check if character is within 'A' to 'Z'
     if (c >= 'A' && c <= 'Z') {
         return soundexMap[c - 'A'];
     }
@@ -49,14 +48,14 @@ char getSoundexCode(char c) {
 }
 
 void generateSoundex(const char *name, char *soundex) {
-    // Initialize Soundex with default values
+    
     soundex[0] = toupper(name[0]);
     soundex[1] = getSoundexCode(name[1]);
     soundex[2] = getSoundexCode(name[2]);
     soundex[3] = getSoundexCode(name[3]);
-    soundex[4] = '\0'; // Null-terminate the Soundex string
+    soundex[4] = '\0'; 
 
-    // Replace any non-valid codes with '0'
+ 
     for (int i = 1; i < 4; ++i) {
         if (soundex[i] == '0') {
             soundex[i] = '0';
@@ -64,5 +63,5 @@ void generateSoundex(const char *name, char *soundex) {
     }
 }    
 
-#endif // SOUNDEX_H
+#endif 
 
