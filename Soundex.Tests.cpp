@@ -2,14 +2,14 @@
 #include <string.h>
 #include "Soundex.h"
 
-// Pure function to test the Soundex code generation
+
 int testSoundex(const char *name, const char *expected) {
     char soundex[5];
     generateSoundex(name, soundex);
     return strcmp(soundex, expected) == 0;
 }
 
-// Function to print the test result
+
 void printTestResult(const char *name, const char *expected) {
     if (testSoundex(name, expected)) {
         printf("Test passed for %s: %s\n", name, expected);
@@ -21,7 +21,7 @@ void printTestResult(const char *name, const char *expected) {
 }
 
 int main() {
-    // Test cases
+   
     printTestResult("Smith", "S530");
     printTestResult("Smyth", "S530");
     printTestResult("Robert", "R163");
