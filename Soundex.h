@@ -49,29 +49,19 @@ char getSoundexCode(char c) {
 }
 
 void generateSoundex(const char *name, char *soundex) {
-    if (name == NULL || soundex == NULL) {
+    if (name[0] == '\0') {
+        // Handle the case when the input name is empty
+        soundex[0] = '\0';
         return;
     }
 
-    // Initialize the Soundex code with the first character
-    soundex[0] = toupper(name[0]);
-    int sIndex = 1;
+    soundex[0] = toupper(name[0]); // Start with the first character
+    soundex[1] = soundex[2] = soundex[3] = '0'; // Pre-fill remaining positions
+    int index = 1; // Start filling Soundex from index 1
 
-    // Iterate over the name and process Soundex codes
-    for (int i = 1; name[i] != '\0' && sIndex < 4; i++) {
-        char code = getSoundexCode(name[i]);
-        // Only add the code if it's not '0' and differs from the previous code
-        if (code != '0' && (sIndex == 1 || code != soundex[sIndex - 1])) {
-            soundex[sIndex++] = code;
-        }
-    }
+    getSoundexCodeForName(name + 1, soundex, &index, '0');
 
-    // Ensure the Soundex code is exactly 4 characters long
-    while (sIndex < 4) {
-        soundex[sIndex++] = '0';
-    }
-
-    soundex[4] = '\0'; // Null-terminate the Soundex string
+    soundex[4] = '\0'; // Null-terminate the Soundex code
 }
 
 #endif // SOUNDEX_H
