@@ -6,16 +6,24 @@
 
 // Helper function to convert a character to its Soundex code
 char getSoundexCode(char c) {
+    // Convert character to uppercase
     c = toupper(c);
-    if (c == 'B' || c == 'F' || c == 'P' || c == 'V') return '1';
-    if (c == 'C' || c == 'G' || c == 'J' || c == 'K' || c == 'Q' || c == 'S' || c == 'X' || c == 'Z') return '2';
-    if (c == 'D' || c == 'T') return '3';
-    if (c == 'L') return '4';
-    if (c == 'M' || c == 'N') return '5';
-    if (c == 'R') return '6';
-    return '0'; // For A, E, I, O, U, H, W, Y
-}
 
+    // Create a lookup table where each index corresponds to a letter of the alphabet
+    static const char soundexTable[26] = {
+        '0', '1', '2', '3', '0', '1', '2', '3', // A, B, C, D, E, F, G, H
+        '0', '2', '0', '3', '0', '1', '0', '2', // I, J, K, L, M, N, O, P
+        '1', '2', '0', '3', '0', '1', '0', '2', // Q, R, S, T, U, V, W, X
+        '2', '0', '0'                           // Y, Z, [out of range]
+    };
+
+    // Return the Soundex code from the lookup table
+    if (c >= 'A' && c <= 'Z') {
+        return soundexTable[c - 'A'];
+    }
+
+    return '0'; // For non-alphabetic characters
+}
 // Simplified pure function to generate Soundex code
 void generateSoundex(const char *name, char *soundex) {
     // Ensure that name is not NULL and soundex is a valid pointer
