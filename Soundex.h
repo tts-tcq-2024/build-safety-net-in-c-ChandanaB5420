@@ -1,56 +1,40 @@
-#include <stdio.h>
-#include <ctype.h>
+#ifndef SOUNDEX_H
+#define SOUNDEX_H
 
-// Function to get the Soundex code for a single character
+#include "Soundex.h"
+#include <ctype.h>
+#include <string.h>
+
 char getSoundexCode(char c) {
-    switch (toupper(c)) {
+    c = toupper(c);
+    switch (c) {
         case 'B': case 'F': case 'P': case 'V': return '1';
         case 'C': case 'G': case 'J': case 'K': case 'Q': case 'S': case 'X': case 'Z': return '2';
         case 'D': case 'T': return '3';
         case 'L': return '4';
         case 'M': case 'N': return '5';
         case 'R': return '6';
-        default: return '0';
+        default: return '0'; // For A, E, I, O, U, H, W, Y
     }
 }
 
-// Function to process a single character and update the Soundex code
-void processCharacter(const char *name, char *soundex, int *index, char previousCode) {
-    if (name[0] == '\0' || *index >= 4) {
-        return;
-    }
-
-    char currentCode = getSoundexCode(name[0]);
-    if (currentCode != '0' && currentCode != previousCode) {
-        soundex[*index] = currentCode;
-        (*index)++;
-    }
-
-    processCharacter(name + 1, soundex, index, currentCode);
-}
-
-// Wrapper function to get the Soundex code for a name
-void getSoundexCodeForName(const char *name, char *soundex) {
-    int index = 1;
+void generateSoundex(const char *name, char *soundex) {
+    int len = strlen(name);
     soundex[0] = toupper(name[0]);
-    processCharacter(name + 1, soundex, &index, getSoundexCode(name[0]));
+    int sIndex = 1;
 
-    // Pad with zeros if necessary
-    while (index < 4) {
-        soundex[index++] = '0';
+    for (int i = 1; i < len && sIndex < 4; i++) {
+        char code = getSoundexCode(name[i]);
+        if (code != '0' && code != soundex[sIndex - 1]) {
+            soundex[sIndex++] = code;
+        }
     }
-    soundex[index] = '\0';
+
+    while (sIndex < 4) {
+        soundex[sIndex++] = '0';
+    }
+
+    soundex[4] = '\0';
 }
 
-int main() {
-    char name[100];
-    char soundex[5];
-
-    printf("Enter a name: ");
-    scanf("%s", name);
-
-    getSoundexCodeForName(name, soundex);
-    printf("Soundex code for %s is %s\n", name, soundex);
-
-    return 0;
-}
+#endif // SOUNDEX_H
