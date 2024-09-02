@@ -18,21 +18,18 @@ char getSoundexCode(char c) {
     return codeMap[upperChar - 'A'];
 }
 
-void getSoundexCodeForName(const char *name, char *soundex, int *index) {
-    char previousCode = '\0'; // Initialize previousCode with a non-valid value
-
-    while (*name != '\0' && *index < 4) {
-        char currentCode = getSoundexCode(*name);
-
-
-        if (currentCode != '0' && currentCode != previousCode) {
-            soundex[*index] = currentCode;
-            (*index)++;
-            previousCode = currentCode; 
-        }
-
-        name++; // Move to the next character
+void getSoundexCodeForName(const char *name, char *soundex, int *index, char previousCode) {
+    if (name[0] == '\0' || *index >= 4) {
+        return;
     }
+
+    char currentCode = getSoundexCode(name[0]);
+    if (currentCode != '0' && currentCode != previousCode) {
+        soundex[*index] = currentCode;
+        (*index)++;
+    }
+
+    getSoundexCodeForName(name + 1, soundex, index, currentCode);
 }
 
 
