@@ -14,9 +14,12 @@ static const char codeMap[] = "000000000000012301200400500600";
 
 // Pure function to get the Soundex code for a given character
 char getSoundexCode(char c) {
-    if (c < 'A' || (c > 'Z' && c < 'a') || c > 'z') {
+    char upperChar = toupper(c);
+    if (upperChar < 'A' || upperChar > 'Z') {
         return '0'; // Non-alphabetic character
     }
+    return codeMap[upperChar - 'A'];
+}
 
     char upperChar = toupper(c);
     return codeMap[upperChar - 'A'];
