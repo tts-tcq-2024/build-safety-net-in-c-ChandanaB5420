@@ -1,46 +1,35 @@
 #ifndef SOUNDEX_H
 #define SOUNDEX_H
-
+ 
 #include <ctype.h>
 #include <string.h>
-
+ 
+// Precomputed mapping from characters to Soundex codes
+static const char codeMap[] = "000000000000012301200400500600";
+ 
 char getSoundexCode(char c) {
-    c = toupper(c);
-    switch (c) {
-        case 'B': case 'F': case 'P': case 'V': return '1';
-        case 'C': case 'G': case 'J': case 'K': case 'Q': case 'S': case 'X': case 'Z': return '2';
-        case 'D': case 'T': return '3';
-        case 'L': return '4';
-        case 'M': case 'N': return '5';
-        case 'R': return '6';
-        default: return '0'; // For A, E, I, O, U, H, W, Y
-    }
+    return codeMap[toupper(c) - 'A'];
 }
-
+ 
 void generateSoundex(const char *name, char *soundex) {
-    int len = strlen(name);
-    if (len == 0) {
-        strcpy(soundex, "0000");
-        return;
-    }
-
+    // Initialize the soundex code
     soundex[0] = toupper(name[0]);
-    char prevCode = getSoundexCode(name[0]);
-    int sIndex = 1;
-
-    for (int i = 1; i < len && sIndex < 4; i++) {
-        char code = getSoundexCode(name[i]);
-        if (code != '0' && code != prevCode) {
-            soundex[sIndex++] = code;
-            prevCode = code;
+    // Pre-fill remaining positions with '0'
+    soundex[1] = soundex[2] = soundex[3] = '0';
+    // Fill the Soundex code based on the name
+    char previousCode = '0';
+    int j = 1;  // Index for soundex
+ 
+    for (int i = 1; name[i] && j < 4; i++) {
+        char currentCode = getSoundexCode(name[i]);
+        if (currentCode != '0' && currentCode != previousCode) {
+            soundex[j++] = currentCode;
+            previousCode = currentCode;
         }
     }
-
-    while (sIndex < 4) {
-        soundex[sIndex++] = '0';
-    }
-
+ 
+    // Null-terminate the Soundex code
     soundex[4] = '\0';
 }
-
+ 
 #endif // SOUNDEX_H
