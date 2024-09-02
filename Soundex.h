@@ -63,12 +63,6 @@ void generateSoundex(const char *name, char *soundex) {
         }
     }
 }    
-    // Fill remaining positions with '0' to ensure the Soundex length is 4
-    while (sIndex < 4) {
-        soundex[sIndex++] = '0';
-    }
-    
-    soundex[4] = '\0'; // Null-terminate the Soundex string
-}
+
 #endif // SOUNDEX_H
 
