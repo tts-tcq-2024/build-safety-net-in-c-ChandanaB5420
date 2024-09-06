@@ -97,11 +97,9 @@ int main() {
     totalFailedTests += test_repeated_consonants();
     totalFailedTests += test_hyphens_in_name();
 
-    if (totalFailedTests == 0) {
-        printf("All tests passed!\n");
+    if (failedTests == 0) {
+        return 0; // All tests passed
     } else {
-        printf("%d tests failed.\n", totalFailedTests);
+        return 1; // Some tests failed
     }
-
-    return 0;
 }
