@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
-#include "soundex.h"  
+#include "Soundex.h"  
  
 void test_empty_string() {
     char result[5];
