@@ -44,7 +44,7 @@ char getSoundexCode(char c) {
         return soundexMap[c - 'A'];
     }
 
-    return '0'; // For non-alphabetic characters
+    return '0'; 
 }
 
 void generateSoundex(const char *name, char *soundex) {
