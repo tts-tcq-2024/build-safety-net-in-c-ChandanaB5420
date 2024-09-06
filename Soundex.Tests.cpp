@@ -1,55 +1,118 @@
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include "Soundex.h"
 
-// Function to test Soundex encoding with descriptive messages
-void testSoundex(const char *name, const char *expected, const char *testDescription) {
-    char soundex[5];
-    generateSoundex(name, soundex);
-    if (strcmp(soundex, expected) != 0) {
-        printf("Test failed: %s\n", testDescription);
-        printf("Expected '%s', got '%s'\n", expected, soundex);
-    } else {
-        printf("Test passed: %s\n", testDescription);
-    }
-}
+// Test function prototypes
+int test_empty_string();
+int test_single_letter();
+int test_typical_name();
+int test_case_insensitivity();
+int test_short_name();
+int test_special_characters();
+int test_spaces_in_name();
+int test_special_characters_and_digits();
+int test_numbers_in_name();
+int test_repeated_consonants();
+int test_hyphens_in_name();
 
 int main() {
-    // Test: Empty input should return '0000'
-    testSoundex("", "0000", "Empty input should return '0000'");
+    int totalFailedTests = 0;
 
-    // Test: Single letter 'A' should return 'A000'
-    testSoundex("A", "A000", "Single letter 'A' should return 'A000'");
+    // Run all tests and accumulate failures
+    totalFailedTests += test_empty_string();
+    totalFailedTests += test_single_letter();
+    totalFailedTests += test_typical_name();
+    totalFailedTests += test_case_insensitivity();
+    totalFailedTests += test_short_name();
+    totalFailedTests += test_special_characters();
+    totalFailedTests += test_spaces_in_name();
+    totalFailedTests += test_special_characters_and_digits();
+    totalFailedTests += test_numbers_in_name();
+    totalFailedTests += test_repeated_consonants();
+    totalFailedTests += test_hyphens_in_name();
 
-    // Test: Name 'Raghav' becomes 'R210'
-    testSoundex("Raghav", "R210", "Name 'Raghav' should become 'R210'");
-
-    // Test: Case-insensitive comparison for 'Avinash' and 'avinash'
-    // Ensure generateSoundex is case-insensitive
-    testSoundex("Avinash", generateSoundex("avinash"), "Case-insensitive comparison for 'Avinash' and 'avinash'");
-
-    // Test: Short name 'Avi' becomes 'A100'
-    testSoundex("Avi", "A100", "Short name 'Avi' should become 'A100'");
-
-    // Test: Special characters are ignored in name 'Ravi@#$'
-    testSoundex("Ravi@#$", "R100", "Special characters are ignored in name 'Ravi@#$'");
-
-    // Test: Spaces are ignored in 'Arvind Rao' and 'Sandeep Prasad'
-    testSoundex("Arvind Rao", "A615", "Spaces are ignored in 'Arvind Rao'");
-    testSoundex("Sandeep  Prasad", "S531", "Spaces are ignored in 'Sandeep  Prasad'");
-
-    // Test: Special characters and digits are ignored in 'Manoj@123'
-    testSoundex("Manoj@123", "M520", "Special characters and digits are ignored in 'Manoj@123'");
-
-    // Test: Numbers in name are ignored in 'avina2'
-    testSoundex("avina2", "A150", "Numbers in name are ignored in 'avina2'");
-
-    // Test: Name with repeated consonants 'Shashank' becomes 'S252'
-    testSoundex("Shashank", "S252", "Name with repeated consonants 'Shashank' should become 'S252'");
-
-    // Test: Name with hyphens ignored in 'Hari-Prasad'
-    testSoundex("Hari-Prasad", "H616", "Name with hyphens ignored in 'Hari-Prasad'");
+    // Output results
+    if (totalFailedTests == 0) {
+        printf("All tests passed!\n");
+    } else {
+        printf("%d tests failed.\n", totalFailedTests);
+    }
 
     return 0;
+}
+
+// Test functions implementation
+
+int test_empty_string() {
+    char result[5];
+    generateSoundex("", result);
+    return strcmp(result, "0000") == 0 ? 0 : 1;
+}
+
+int test_single_letter() {
+    char result[5];
+    generateSoundex("A", result);
+    return strcmp(result, "A000") == 0 ? 0 : 1;
+}
+
+int test_typical_name() {
+    char result[5];
+    generateSoundex("Raghav", result);
+    return strcmp(result, "R210") == 0 ? 0 : 1;
+}
+
+int test_case_insensitivity() {
+    char result1[5], result2[5];
+    generateSoundex("Avinash", result1);
+    generateSoundex("avinash", result2);
+    return strcmp(result1, result2) == 0 ? 0 : 1;
+}
+
+int test_short_name() {
+    char result[5];
+    generateSoundex("Avi", result);
+    return strcmp(result, "A100") == 0 ? 0 : 1;
+}
+
+int test_special_characters() {
+    char result[5];
+    generateSoundex("Ravi@#$", result);
+    return strcmp(result, "R100") == 0 ? 0 : 1;
+}
+
+int test_spaces_in_name() {
+    char result[5];
+    generateSoundex("Arvind Rao", result);
+    int status = strcmp(result, "A615") == 0 ? 0 : 1;
+    
+    if (status == 0) {
+        generateSoundex("Sandeep  Prasad", result);
+        status = strcmp(result, "S531") == 0 ? 0 : 1;
+    }
+    
+    return status;
+}
+
+int test_special_characters_and_digits() {
+    char result[5];
+    generateSoundex("Manoj@123", result);
+    return strcmp(result, "M520") == 0 ? 0 : 1;
+}
+
+int test_numbers_in_name() {
+    char result[5];
+    generateSoundex("avina2", result);
+    return strcmp(result, "A150") == 0 ? 0 : 1;
+}
+
+int test_repeated_consonants() {
+    char result[5];
+    generateSoundex("Shashank", result);
+    return strcmp(result, "S252") == 0 ? 0 : 1;
+}
+
+int test_hyphens_in_name() {
+    char result[5];
+    generateSoundex("Hari-Prasad", result);
+    return strcmp(result, "H616") == 0 ? 0 : 1;
 }
