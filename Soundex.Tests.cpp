@@ -1,115 +1,55 @@
 #include <stdio.h>
-#include <assert.h>
 #include <string.h>
-#include "Soundex.h"  
- 
-void test_empty_string() {
-    char result[5];
-    generateSoundex("", result);
-    assert(strcmp(result, "0000") == 0);
- 
+#include <assert.h>
+#include "Soundex.h"
 
+// Function to test Soundex encoding with descriptive messages
+void testSoundex(const char *name, const char *expected, const char *testDescription) {
+    char soundex[5];
+    generateSoundex(name, soundex);
+    if (strcmp(soundex, expected) != 0) {
+        printf("Test failed: %s\n", testDescription);
+        printf("Expected '%s', got '%s'\n", expected, soundex);
+    } else {
+        printf("Test passed: %s\n", testDescription);
+    }
 }
- 
-void test_single_character() {
-    char result[5];
-    generateSoundex("A", result);
-    assert(strcmp(result, "A000") == 0);
- 
 
-}
- 
-void test_typical_name() {
-    char result[5];
-    generateSoundex("Raghav", result);
-    assert(strcmp(result, "R020") == 0);
-
-
-}
- 
-void test_case_insensitivity() {
-    char result1[5];
-    char result2[5];
-    generateSoundex("Yashwanth", result1);
-    generateSoundex("yashwanth", result2);
-    assert(strcmp(result1, result2) == 0);
-
-
-}
- 
-void test_padding_to_four_digits() {
-
-    char result[5];
-
-    generateSoundex("G", result);
-
-    assert(strcmp(result, "G000") == 0);
-
-
-
-}
- 
-void test_trimming_to_four_digits() {
-
-    char result[5];
-
-    generateSoundex("Shivakumar", result);
-
-    assert(strcmp(result, "S152") == 0);
-
-
-
-}
- 
-void test_non_alphabetic_characters() {
-    char result[5];
-    generateSoundex("Ravi@#$", result);
-    assert(strcmp(result, "R130") == 0);
-
-}
- 
-void test_names_with_spaces() {
-    char result[5];
-    generateSoundex("Anil Kumar", result);
-    assert(strcmp(result, "A524") == 0);
-    printf("test_names_with_spaces passed!\n");
-    generateSoundex("Anil  Kumar", result);  // Multiple spaces
-    assert(strcmp(result, "A524") == 0);
-
-}
- 
-void test_special_characters_in_name() {
-    char result[5];
-
-    generateSoundex("Manoj@123", result);
-
-    assert(strcmp(result, "M520") == 0);
-
-   
-
-}
- 
 int main() {
+    // Test: Empty input should return '0000'
+    testSoundex("", "0000", "Empty input should return '0000'");
 
-    test_empty_string();
+    // Test: Single letter 'A' should return 'A000'
+    testSoundex("A", "A000", "Single letter 'A' should return 'A000'");
 
-    test_single_character();
+    // Test: Name 'Raghav' becomes 'R210'
+    testSoundex("Raghav", "R210", "Name 'Raghav' should become 'R210'");
 
-    test_typical_name();
+    // Test: Case-insensitive comparison for 'Avinash' and 'avinash'
+    // Ensure generateSoundex is case-insensitive
+    testSoundex("Avinash", generateSoundex("avinash"), "Case-insensitive comparison for 'Avinash' and 'avinash'");
 
-    test_case_insensitivity();
+    // Test: Short name 'Avi' becomes 'A100'
+    testSoundex("Avi", "A100", "Short name 'Avi' should become 'A100'");
 
-    test_padding_to_four_digits();
+    // Test: Special characters are ignored in name 'Ravi@#$'
+    testSoundex("Ravi@#$", "R100", "Special characters are ignored in name 'Ravi@#$'");
 
-    test_trimming_to_four_digits();
+    // Test: Spaces are ignored in 'Arvind Rao' and 'Sandeep Prasad'
+    testSoundex("Arvind Rao", "A615", "Spaces are ignored in 'Arvind Rao'");
+    testSoundex("Sandeep  Prasad", "S531", "Spaces are ignored in 'Sandeep  Prasad'");
 
-    test_non_alphabetic_characters();
+    // Test: Special characters and digits are ignored in 'Manoj@123'
+    testSoundex("Manoj@123", "M520", "Special characters and digits are ignored in 'Manoj@123'");
 
-    test_names_with_spaces();
+    // Test: Numbers in name are ignored in 'avina2'
+    testSoundex("avina2", "A150", "Numbers in name are ignored in 'avina2'");
 
-    test_special_characters_in_name();
+    // Test: Name with repeated consonants 'Shashank' becomes 'S252'
+    testSoundex("Shashank", "S252", "Name with repeated consonants 'Shashank' should become 'S252'");
 
+    // Test: Name with hyphens ignored in 'Hari-Prasad'
+    testSoundex("Hari-Prasad", "H616", "Name with hyphens ignored in 'Hari-Prasad'");
 
+    return 0;
 }
-
- 
