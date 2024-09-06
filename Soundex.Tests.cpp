@@ -97,7 +97,7 @@ int main() {
     totalFailedTests += test_repeated_consonants();
     totalFailedTests += test_hyphens_in_name();
 
-    if (failedTests == 0) {
+    if (totalFailedTests == 0) {
         return 0; // All tests passed
     } else {
         return 1; // Some tests failed
