@@ -98,8 +98,10 @@ int main() {
     totalFailedTests += test_hyphens_in_name();
 
     if (totalFailedTests == 0) {
-        return 0; // All tests passed
+        printf("All tests passed!\n");
     } else {
-        return 1; // Some tests failed
+        printf("%d tests failed.\n", totalFailedTests);
     }
+
+    return 0;
 }
