@@ -2,7 +2,6 @@
 #include <string.h>
 #include "Soundex.h"
 
-// Test function prototypes
 int test_empty_string();
 int test_single_letter();
 int test_typical_name();
@@ -14,34 +13,6 @@ int test_special_characters_and_digits();
 int test_numbers_in_name();
 int test_repeated_consonants();
 int test_hyphens_in_name();
-
-int main() {
-    int totalFailedTests = 0;
-
-    // Run all tests and accumulate failures
-    totalFailedTests += test_empty_string();
-    totalFailedTests += test_single_letter();
-    totalFailedTests += test_typical_name();
-    totalFailedTests += test_case_insensitivity();
-    totalFailedTests += test_short_name();
-    totalFailedTests += test_special_characters();
-    totalFailedTests += test_spaces_in_name();
-    totalFailedTests += test_special_characters_and_digits();
-    totalFailedTests += test_numbers_in_name();
-    totalFailedTests += test_repeated_consonants();
-    totalFailedTests += test_hyphens_in_name();
-
-    // Output results
-    if (totalFailedTests == 0) {
-        printf("All tests passed!\n");
-    } else {
-        printf("%d tests failed.\n", totalFailedTests);
-    }
-
-    return 0;
-}
-
-// Test functions implementation
 
 int test_empty_string() {
     char result[5];
@@ -109,4 +80,28 @@ int test_hyphens_in_name() {
     char result[5];
     generateSoundex("Hari-Prasad", result);
     return strcmp(result, "H616") == 0 ? 0 : 1;
+}
+
+int main() {
+    int totalFailedTests = 0;
+
+    totalFailedTests += test_empty_string();
+    totalFailedTests += test_single_letter();
+    totalFailedTests += test_typical_name();
+    totalFailedTests += test_case_insensitivity();
+    totalFailedTests += test_short_name();
+    totalFailedTests += test_special_characters();
+    totalFailedTests += test_spaces_in_name();
+    totalFailedTests += test_special_characters_and_digits();
+    totalFailedTests += test_numbers_in_name();
+    totalFailedTests += test_repeated_consonants();
+    totalFailedTests += test_hyphens_in_name();
+
+    if (totalFailedTests == 0) {
+        printf("All tests passed!\n");
+    } else {
+        printf("%d tests failed.\n", totalFailedTests);
+    }
+
+    return 0;
 }
