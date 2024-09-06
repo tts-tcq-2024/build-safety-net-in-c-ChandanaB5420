@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include <ctype.h>
+
 char getSoundexCode(char c) {
     static const char soundexMap[26] = {
         '0', // A
@@ -62,5 +63,4 @@ void generateSoundex(const char *name, char *soundex) {
     }
 }    
 
-#endif 
-
+#endif
