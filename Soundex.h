@@ -6,35 +6,59 @@
 #include <string.h>
 
 char getSoundexCode(char c) {
+    static const char soundexMap[26] = {
+        '0', // A
+        '1', // B
+        '2', // C
+        '3', // D
+        '0', // E
+        '1', // F
+        '2', // G
+        '0', // H
+        '0', // I
+        '1', // J
+        '2', // K
+        '0', // L
+        '5', // M
+        '5', // N
+        '0', // O
+        '2', // P
+        '0', // Q
+        '0', // R
+        '0', // S
+        '3', // T
+        '0', // U
+        '1', // V
+        '0', // W
+        '0', // X
+        '2', // Y
+        '2'  // Z
+    };
+
+   
     c = toupper(c);
-    switch (c) {
-        case 'B': case 'F': case 'P': case 'V': return '1';
-        case 'C': case 'G': case 'J': case 'K': case 'Q': case 'S': case 'X': case 'Z': return '2';
-        case 'D': case 'T': return '3';
-        case 'L': return '4';
-        case 'M': case 'N': return '5';
-        case 'R': return '6';
-        default: return '0'; // For A, E, I, O, U, H, W, Y
+
+    if (c >= 'A' && c <= 'Z') {
+        return soundexMap[c - 'A'];
     }
+
+    return '0'; 
 }
 
 void generateSoundex(const char *name, char *soundex) {
-    int len = strlen(name);
+    
     soundex[0] = toupper(name[0]);
-    int sIndex = 1;
+    soundex[1] = getSoundexCode(name[1]);
+    soundex[2] = getSoundexCode(name[2]);
+    soundex[3] = getSoundexCode(name[3]);
+    soundex[4] = '\0'; 
 
-    for (int i = 1; i < len && sIndex < 4; i++) {
-        char code = getSoundexCode(name[i]);
-        if (code != '0' && code != soundex[sIndex - 1]) {
-            soundex[sIndex++] = code;
+ 
+    for (int i = 1; i < 4; ++i) {
+        if (soundex[i] == '0') {
+            soundex[i] = '0';
         }
     }
+}    
 
-    while (sIndex < 4) {
-        soundex[sIndex++] = '0';
-    }
-
-    soundex[4] = '\0';
-}
-
-#endif // SOUNDEX_H
+#endif
